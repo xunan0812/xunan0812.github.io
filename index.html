@@ -80,7 +80,7 @@
 
 
 
-  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+  <link rel="shortcut icon" type="image/x-icon" href="/images/bitbug_favicon.ico?v=5.1.0" />
 
 
 
@@ -275,7 +275,7 @@
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Nan Xu">
       <meta itemprop="description" content="">
-      <meta itemprop="image" content="http://www.6681.com/uploads/allimg/160419/41-160419153946-50.jpg">
+      <meta itemprop="image" content="/images/avatar.jpg">
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
@@ -368,58 +368,46 @@
 
       
         
-          
-            <p>##Bert在QA上的新应用</p>
-<h3 id="1-QA任务最新排行榜"><a href="#1-QA任务最新排行榜" class="headerlink" title="1. QA任务最新排行榜"></a>1. QA任务最新排行榜</h3><ul>
-<li><p><a href="https://rajpurkar.github.io/SQuAD-explorer/" target="_blank" rel="external">SQuAD 2.0</a></p>
+          <p>##Bert在QA上的新应用</p>
+<h3 id="QA任务最新排行榜"><a href="#QA任务最新排行榜" class="headerlink" title="QA任务最新排行榜"></a>QA任务最新排行榜</h3><ul>
+<li><p><a href="https://rajpurkar.github.io/SQuAD-explorer/">SQuAD 2.0</a></p>
 <ul>
 <li>Bert bsaed (50/89), top1 已超越人工</li>
 <li>一问一答，同一段文章会有多个问题，但是每个问题之间没有联系</li>
 </ul>
-<p>| Rank          | Model                                                        | EM         | F1         |<br>| ————- | ———————————————————— | ———- | ———- |<br>|               | Human PerformanceStanford University<a href="http://arxiv.org/abs/1606.05250" target="_blank" rel="external">(Rajpurkar &amp; Jia et al. ‘18)</a> | 86.831     | 89.452     |<br>| 1Mar 20, 2019 | BERT + DAE + AoA (ensemble)  Joint Laboratory of HIT and iFLYTEK Research | <strong>87.147</strong> | <strong>89.474</strong> |</p>
-</li>
-<li><p><a href="https://stanfordnlp.github.io/coqa/" target="_blank" rel="external">CoQA</a></p>
-<ul>
-<li>Bert bsaed (14/89), top1 已超越人工</li>
-<li>CoQA 数据集中的一个对话：包含一个问题（Qi），一个答案（Ai）和支持答案的理由（Ri）。CoQA侧重点与SQuAD评测不同。<strong>CoQA数据集中的问题不再是单轮的一问一答的形式，而是扩展到多轮的对话交互。</strong>几乎有一半的 CoQA 问题使用共指关系回溯到会话历史，并且很大一部分需要语用推理，这导致仅依赖词汇线索的模型更具挑战性。</li>
-</ul>
-<p>| Rank          | Model                                                        | In-domain | Out-of-domain | Overall  |<br>| ————- | ———————————————————— | ——— | ————- | ——– |<br>|               | Human PerformanceStanford University<a href="http://arxiv.org/abs/1808.07042" target="_blank" rel="external">(Reddy &amp; Chen et al. ‘18)</a> | 89.4      | 87.4          | 88.8     |<br>| 1Mar 29, 2019 | Google SQuAD 2.0 + MMFT (ensemble)       MSRA + SDRG         | <strong>89.9</strong>  | <strong>88.0</strong>      | <strong>89.4</strong> |</p>
-</li>
-<li><p><a href="https://ai.google.com/research/NaturalQuestions" target="_blank" rel="external">Google NQ</a></p>
-<ul>
-<li>Bert作为baseline</li>
-<li>一问多答，同一段文章一个短答案和支持的长答案</li>
-</ul>
-</li>
-<li><p><a href="http://lic2019.ccf.org.cn/talk" target="_blank" rel="external">2019语言与智能技术竞赛知识驱动对话数据集</a></p>
-<ul>
-<li>话题引导的问答模式，在基于知识的情况下，引导对话顺着话题继续</li>
-</ul>
-<p>| baseline system  | F1/BLEU1/BLEU2    | DISTINCT1/DISTINCT2 |<br>| —————- | —————– | ——————- |<br>| retrieval-based  | 31.72/0.291/0.156 | 0.118/0.373         |<br>| generation-based | 32.65/0.300/0.168 | 0.062/0.128         |</p>
 </li>
 </ul>
-<h3 id="2-相关论文阅读"><a href="#2-相关论文阅读" class="headerlink" title="2.相关论文阅读"></a>2.相关论文阅读</h3><h4 id="2-1-抽取式问答"><a href="#2-1-抽取式问答" class="headerlink" title="2.1 抽取式问答"></a>2.1 抽取式问答</h4><p>该类任务的答案需要在原文中找到，所以模型都是预测原文中每一个词作为答案起始词和终止词的概率</p>
-<ol>
-<li>A BERT Baseline for the Natural Questions，标准bert框架解决NQ问题，Google NQ排行榜baseline</li>
-<li>SDN ET: C ONTEXTUALIZED ATTENTION - BASED D EEP N ETWORK FOR C ONVERSATIONAL Q UESTION A N -SWERING，MSRA，BERT预训练作为上游任务，CoQA当前排行11，唯一一个开源的</li>
-<li>COMPETITION ON KNOWLEDGE DRIVEN DIALOGUE，百度，知识驱动对话数据集生成式模型baseline（非Bert模型）</li>
-<li>Data Augmentation for BERT Fine-Tuning in Open-Domain Question Answering. 基于数据增强来微调Bert模型</li>
-</ol>
-<h4 id="2-2-非抽取式问答，多项选择阅读理解"><a href="#2-2-非抽取式问答，多项选择阅读理解" class="headerlink" title="2.2 非抽取式问答，多项选择阅读理解"></a>2.2 非抽取式问答，多项选择阅读理解</h4><p> 非抽取问题相较于抽取问题，答案很多时候不是原文中句子，而且还要面临各种复杂情况，比如数学题，摘要，逻辑，情感等，更多时候采用的是匹配匹配模型，即每个选项同原文的相似度等。</p>
-<ol>
-<li>Improving Machine Reading Comprehension with General Reading Strategies，制定了三种能有效提升机器阅读理解的策略</li>
-<li>Option Comparison Network for Multiple-choice Reading Comprehension，期望机器模仿人类阅读过程，比价选项答案之间的微妙不同</li>
-</ol>
-<h3 id="3-商业问答系统介绍对比"><a href="#3-商业问答系统介绍对比" class="headerlink" title="3.商业问答系统介绍对比"></a>3.商业问答系统介绍对比</h3><ol>
-<li><a href="http://www.sohu.com/a/285163395_473283" target="_blank" rel="external">小冰</a></li>
-<li><a href="https://zhuanlan.zhihu.com/p/32354528" target="_blank" rel="external">Siri</a></li>
-<li><a href="https://www.geekpark.net/news/213473" target="_blank" rel="external">Google Now、Cortana和Siri对比</a></li>
-<li><a href="https://102.alibaba.com/detail?id=114" target="_blank" rel="external">小蜜</a></li>
-<li><a href="https://blog.csdn.net/tiweeny/article/details/81475957" target="_blank" rel="external">阿里小蜜技术整理</a></li>
-<li><a href="https://blog.csdn.net/m0epNwstYk4/article/details/79285961" target="_blank" rel="external">对话系统原理和实践-来也</a></li>
-</ol>
-
-          
+<table>
+<thead>
+<tr>
+<th>Rank</th>
+<th>Model</th>
+<th>EM</th>
+<th>F1</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td></td>
+<td>Human PerformanceStanford University<a href="http://arxiv.org/abs/1606.05250">(Rajpurkar &amp; Jia et al. ‘18)</a></td>
+<td>86.831</td>
+<td>89.452</td>
+</tr>
+<tr>
+<td>1Mar 20, 2019</td>
+<td>BERT + DAE + AoA (ensemble)  Joint Laboratory of HIT and iFLYTEK Research</td>
+<td><strong>87.147</strong></td>
+<td><strong>89.474</strong></td>
+</tr>
+</tbody>
+</table>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2019/04/18/Bert在QA上新应用小结/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -470,7 +458,7 @@
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Nan Xu">
       <meta itemprop="description" content="">
-      <meta itemprop="image" content="http://www.6681.com/uploads/allimg/160419/41-160419153946-50.jpg">
+      <meta itemprop="image" content="/images/avatar.jpg">
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
@@ -636,7 +624,7 @@
       <section class="site-overview sidebar-panel sidebar-panel-active">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image"
-               src="http://www.6681.com/uploads/allimg/160419/41-160419153946-50.jpg"
+               src="/images/avatar.jpg"
                alt="Nan Xu" />
           <p class="site-author-name" itemprop="name">Nan Xu</p>
            
