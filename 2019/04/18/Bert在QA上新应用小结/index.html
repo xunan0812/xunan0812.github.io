@@ -143,7 +143,7 @@ Human PerformanceStanford University(Rajpurkar &amp;amp; Jia et al. ‘18)
 
 
 1Mar">
-<meta property="og:updated_time" content="2019-04-18T14:51:34.669Z">
+<meta property="og:updated_time" content="2019-04-24T09:32:02.726Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Bert在QA上新应用小结">
 <meta name="twitter:description" content="QA任务最新排行榜
@@ -542,6 +542,51 @@ Human PerformanceStanford University(Rajpurkar &amp;amp; Jia et al. ‘18)
 </tr>
 </tbody>
 </table>
+<ul>
+<li><p><a href="http://www.qizhexie.com/data/RACE_leaderboard" target="_blank" rel="external">RACE</a></p>
+<ul>
+<li>阅读理解数据集，包含中学生和高中生英语考试两个子数据集</li>
+</ul>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th style="text-align:center"><strong>Model</strong></th>
+<th style="text-align:center"><strong>Report Time</strong></th>
+<th style="text-align:center"><strong>Institute</strong></th>
+<th style="text-align:center"><strong>RACE</strong></th>
+<th style="text-align:center"><strong>RACE-M</strong></th>
+<th style="text-align:center"><strong>RACE-H</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center"><a href="https://arxiv.org/pdf/1704.04683.pdf" target="_blank" rel="external">Human Ceiling Performance</a></td>
+<td style="text-align:center">Apr. 2017</td>
+<td style="text-align:center">CMU</td>
+<td style="text-align:center"><em>94.5</em></td>
+<td style="text-align:center"><em>95.4</em></td>
+<td style="text-align:center"><em>94.2</em></td>
+</tr>
+<tr>
+<td style="text-align:center"><a href="https://arxiv.org/pdf/1704.04683.pdf" target="_blank" rel="external">Amazon Mechanical Turker</a></td>
+<td style="text-align:center">Apr. 2017</td>
+<td style="text-align:center">CMU</td>
+<td style="text-align:center">73.3</td>
+<td style="text-align:center">85.1</td>
+<td style="text-align:center">69.4</td>
+</tr>
+<tr>
+<td style="text-align:center"><a href="https://arxiv.org/pdf/1901.09381.pdf" target="_blank" rel="external">Dual Co-Matching Network (DCMN)</a> (ensemble)</td>
+<td style="text-align:center">Mar. 2019</td>
+<td style="text-align:center">SJTU &amp; CloudWalk</td>
+<td style="text-align:center"><strong>74.1</strong></td>
+<td style="text-align:center"><strong>79.5</strong></td>
+<td style="text-align:center"><strong>71.8</strong></td>
+</tr>
+</tbody>
+</table>
 <h3 id="相关论文阅读"><a href="#相关论文阅读" class="headerlink" title="相关论文阅读"></a>相关论文阅读</h3><h4 id="抽取式问答"><a href="#抽取式问答" class="headerlink" title="抽取式问答"></a>抽取式问答</h4><p>该类任务的答案需要在原文中找到，所以模型都是预测原文中每一个词作为答案起始词和终止词的概率</p>
 <ol>
 <li>A BERT Baseline for the Natural Questions，标准bert框架解决NQ问题，Google NQ排行榜baseline</li>
@@ -552,7 +597,67 @@ Human PerformanceStanford University(Rajpurkar &amp;amp; Jia et al. ‘18)
 <h4 id="非抽取式问答，多项选择阅读理解"><a href="#非抽取式问答，多项选择阅读理解" class="headerlink" title="非抽取式问答，多项选择阅读理解"></a>非抽取式问答，多项选择阅读理解</h4><p> 非抽取问题相较于抽取问题，答案很多时候不是原文中句子，而且还要面临各种复杂情况，比如数学题，摘要，逻辑，情感等，更多时候采用的是匹配匹配模型，即每个选项同原文的相似度等。</p>
 <ol>
 <li>Improving Machine Reading Comprehension with General Reading Strategies，制定了三种能有效提升机器阅读理解的策略</li>
-<li>Option Comparison Network for Multiple-choice Reading Comprehension，期望机器模仿人类阅读过程，比价选项答案之间的微妙不同</li>
+<li>Option Comparison Network for Multiple-choice Reading Comprehension，期望机器模仿人类阅读过程，比较选项答案之间的微妙不同</li>
+<li>Convolutional Spatial Attention Model for Reading Comprehension with Multiple-Choice Questions，捕捉原文、问题、选项之间的关系，并采用卷积空间层3D融合各个注意力</li>
+<li>Improving Question Answering with External Knowledge，基于外部知识，实体抽取和链接</li>
+<li>Dual Co-Matching Network for Multi-choice Reading Comprehension，原文、实体、选项之间，两两双向建模融合信息</li>
+</ol>
+<h3 id="阅读理解任务使用的技巧总结"><a href="#阅读理解任务使用的技巧总结" class="headerlink" title="阅读理解任务使用的技巧总结"></a>阅读理解任务使用的技巧总结</h3><p>这里简单总结了上述文章中在QA任务中的一些技巧或者优化手段</p>
+<ol>
+<li><p>上游语言模型</p>
+<p>这里就是从词向量角度出发，考虑使用更好的预训练的语言模型来提升模型性能，目前来说有以下</p>
+<ul>
+<li>Bert：各种语言模型中收益最大的，基本提升都在5%-10%以上</li>
+<li>GPT</li>
+<li>EMLo</li>
+<li>GloVe：base词向量</li>
+</ul>
+<p>除了直接替换词向量为bert以外，还有人把词向量(上下文无关)，Bert等(上下文相关)拼接起来，目前也有很多工作会再拼接一些特征向量pos等，效果都有提升</p>
+</li>
+<li><p>下游模型</p>
+<p>这里就是通过改模型来提升之前QA的性能，目前来说收益比较大的策略如下</p>
+<ul>
+<li><p>Bert基本框架拿来使用</p>
+<ul>
+<li>QA数据集，使用QA框架</li>
+<li>MRC数据集，使用Matching框架</li>
+</ul>
+</li>
+<li><p>在Bert的基础上更改</p>
+<ul>
+<li>标准QA中Bert输入的顺序，如[p,q&amp;o]，改成[q,p&amp;o]等等</li>
+<li>Bert输出层更改，加权平均Bert的隐含层表示</li>
+</ul>
+</li>
+<li><p>数据处理上改进</p>
+<ul>
+<li>启用外部知识，增强原文，比如通过实体挖掘和链接扩充原文</li>
+<li>数据增强，提升正样本和样本的质量，相对于随机采样来说</li>
+</ul>
+</li>
+<li><p>三元组关系建模</p>
+<p>在QA任务中更好构建原文p，问题q和选项o之间的建模</p>
+<ul>
+<li>关系建模，p-q，p-o，q-o之间的关系，单项或者双向建模都有</li>
+<li>信息融合<ul>
+<li>拼接</li>
+<li>注意力</li>
+<li>3D注意力</li>
+<li>多种特征组合</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>各种策略</p>
+<ul>
+<li><p>高亮策略HL，增强原文中在问题和选项中出现的词</p>
+</li>
+<li><p>自我评估SA，使模型学会从数据中提取关键信息的能力</p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
 </ol>
 <h3 id="商业问答系统介绍对比"><a href="#商业问答系统介绍对比" class="headerlink" title="商业问答系统介绍对比"></a>商业问答系统介绍对比</h3><ol>
 <li><a href="http://www.sohu.com/a/285163395_473283" target="_blank" rel="external">小冰</a></li>
@@ -774,7 +879,7 @@ Human PerformanceStanford University(Rajpurkar &amp;amp; Jia et al. ‘18)
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#QA任务最新排行榜"><span class="nav-number">1.</span> <span class="nav-text">QA任务最新排行榜</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#相关论文阅读"><span class="nav-number">2.</span> <span class="nav-text">相关论文阅读</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#抽取式问答"><span class="nav-number">2.1.</span> <span class="nav-text">抽取式问答</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#非抽取式问答，多项选择阅读理解"><span class="nav-number">2.2.</span> <span class="nav-text">非抽取式问答，多项选择阅读理解</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#商业问答系统介绍对比"><span class="nav-number">3.</span> <span class="nav-text">商业问答系统介绍对比</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#QA任务最新排行榜"><span class="nav-number">1.</span> <span class="nav-text">QA任务最新排行榜</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#相关论文阅读"><span class="nav-number">2.</span> <span class="nav-text">相关论文阅读</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#抽取式问答"><span class="nav-number">2.1.</span> <span class="nav-text">抽取式问答</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#非抽取式问答，多项选择阅读理解"><span class="nav-number">2.2.</span> <span class="nav-text">非抽取式问答，多项选择阅读理解</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#阅读理解任务使用的技巧总结"><span class="nav-number">3.</span> <span class="nav-text">阅读理解任务使用的技巧总结</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#商业问答系统介绍对比"><span class="nav-number">4.</span> <span class="nav-text">商业问答系统介绍对比</span></a></li></ol></div>
             
 
           </div>
