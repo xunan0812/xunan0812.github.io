@@ -1,0 +1,820 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="深度森林,Deep Forest,gcForest," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/images/bitbug_favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="深度森林Deep Forest：探索深度神经网络以外的方法原文：Deep Forest:Towards An Alternative to Deep Neural Networks，周志华，2017
+该篇文章提出了深度森林 gcForest，这是一种决策树集成方法（decision tree ensemble approach），性能较之深度神经网络有很强的竞争力。深度神经网络需要花大力气调参，相">
+<meta property="og:type" content="article">
+<meta property="og:title" content="深度深林阅读笔记">
+<meta property="og:url" content="http://xunan0812.github.io/2019/06/13/深度森林-阅读笔记/index.html">
+<meta property="og:site_name" content="Miracle">
+<meta property="og:description" content="深度森林Deep Forest：探索深度神经网络以外的方法原文：Deep Forest:Towards An Alternative to Deep Neural Networks，周志华，2017
+该篇文章提出了深度森林 gcForest，这是一种决策树集成方法（decision tree ensemble approach），性能较之深度神经网络有很强的竞争力。深度神经网络需要花大力气调参，相">
+<meta property="og:updated_time" content="2019-09-24T07:22:51.090Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="深度深林阅读笔记">
+<meta name="twitter:description" content="深度森林Deep Forest：探索深度神经网络以外的方法原文：Deep Forest:Towards An Alternative to Deep Neural Networks，周志华，2017
+该篇文章提出了深度森林 gcForest，这是一种决策树集成方法（decision tree ensemble approach），性能较之深度神经网络有很强的竞争力。深度神经网络需要花大力气调参，相">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://xunan0812.github.io/2019/06/13/深度森林-阅读笔记/"/>
+
+
+
+
+
+  <title> 深度深林阅读笔记 | Miracle </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Miracle</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://xunan0812.github.io/2019/06/13/深度森林-阅读笔记/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Nan Xu">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Miracle">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                深度深林阅读笔记
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-06-13T21:05:25+08:00">
+                2019-06-13
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Paper/" itemprop="url" rel="index">
+                    <span itemprop="name">Paper</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="深度森林Deep-Forest：探索深度神经网络以外的方法"><a href="#深度森林Deep-Forest：探索深度神经网络以外的方法" class="headerlink" title="深度森林Deep Forest：探索深度神经网络以外的方法"></a>深度森林Deep Forest：探索深度神经网络以外的方法</h1><p>原文：<a href="https://arxiv.org/pdf/1702.08835v2.pdf" target="_blank" rel="external">Deep Forest:Towards An Alternative to Deep Neural Networks</a>，周志华，2017</p>
+<p>该篇文章提出了深度森林 gcForest，这是一种决策树集成方法（decision tree ensemble approach），性能较之深度神经网络有很强的竞争力。深度神经网络需要花大力气调参，相比之下 gcForest 要容易训练得多。实际上，在几乎完全一样的超参数设置下，gcForest 在处理不同领域（domain）的不同数据时，也能达到极佳的性能。gcForest 的训练过程效率高且可扩展。实验中，它在一台 PC 上的训练时间和在 GPU 设施上跑的深度神经网络差不多，有鉴于 gcForest 天然适用于并行的部署，其效率高的优势就更为明显。此外，深度神经网络需要大规模的训练数据，而 gcForest 在仅有小规模训练数据的情况下也照常运转。不仅如此，作为一种基于树的方法，gcForest 在理论分析方面也应当比深度神经网络更加容易。 </p>
+<a id="more"></a>
+<h4 id="表征学习Representation-Learning"><a href="#表征学习Representation-Learning" class="headerlink" title="表征学习Representation Learning"></a>表征学习Representation Learning</h4><p>无论是深度学习还是深度森林，归根到底还是一个表征学习的过程，通过训练学习，使得模型学习发现样本的表征feature，好的表征器能够获得好的feature用于后面的分类、回归等任务输入。所以目前表征学习期望能够获得更好的样本特征表示，只要特征足够好，分类函数本身并不需要复杂。</p>
+<p>一般来说为了运用大量数据，学习模型的容量通常都很大，因此深度网络因其复杂的网络结构，深度，有很强的样本表征学习能力。而DNN网络其实就是广义线性模型的非线性叠加，神经元组成实现线性计算，非线性激活实现非线性叠加。因此DNN能够自动发现特征与标签之间的非线性关系，即可通过端到端的训练得到非线性的神经决策边界。</p>
+<p>因此，本文的作者推测可以将这种性质用到其他合适的学习模型上，即将神经元这个基本结构替换成的了决策树产生了深度森林gcForest模型。</p>
+<p>####深度森林gcForest</p>
+<p>深度神经网络中的表征学习主要依赖于对原始特征进行逐层处理，因为有误差反向传播，整个过程整个网络属于端到端同步训练。<br>gcForest受此启发，采用级联结构，其中级联中的每一级接收到由前一级处理的特征信息，并将该级的处理结果输出给下一级，但是没有反向传播，确定一级在不满足终止条件时，扩展新级。在扩展一个新的级后，整个级联的性能将在验证集上进行估计，如果没有显着的性能增益，训练过程将终止；因此，级联中级的数量是自动确定的。与模型的复杂性固定的大多数深度神经网络相反，gcForest 能够适当地通过终止训练来决定其模型的复杂度。这使得 gcForest 能够适用于不同规模的训练数据，而不局限于大规模训练数据。</p>
+<p>通过级联结构，深度森林将模型作深。</p>
+<p>在处理特征上，同样受到DNN启发。gcForest认为对于对序列数据，顺序信息是极为关键的，因此，用多粒度扫描来增强级联森林。具体的：类似于卷积网络的多核局部感受野实现，采用滑动窗口的方法，先生成若干个实例，然后通过实例生成两个森林，一个完全随机森林，一个随机森林，然后再把生成的两个森林生成对应的相同维度的“类向量”，最后把这两大类向量连接在一起，但应对的一般来说会采用多个不同大小的窗口做扫描，类似于多核卷积。</p>
+<p>其中两中类型的随机森林保证集成子模型之间的差异性。</p>
+<h4 id="深度森林gcForest比深度网络DNN的优势所在"><a href="#深度森林gcForest比深度网络DNN的优势所在" class="headerlink" title="深度森林gcForest比深度网络DNN的优势所在"></a>深度森林gcForest比深度网络DNN的优势所在</h4><ul>
+<li>集成性：gcForest属于一种集成的集成方法</li>
+<li>高性能：gcForest性能较深度神经网络有很强的竞争力</li>
+<li>参数少：gcForest所需参数少，容易训练</li>
+<li>鲁棒性：gcForest对于超参数的设置不敏感，鲁棒性高</li>
+<li>效率高：gcForest训练过程效率高且可扩展，适用于并行的部署</li>
+<li>扩展性：gcForest对于数据量没有要求，在小数据集上也能获得很好的性能</li>
+<li>解释性：gcForest作为一种基于树的方法，在理论分析方面也应当比深度神经网络更加容易</li>
+<li>自适应：gcForest 能够适当地通过终止训练来决定其模型的复杂度，使其不局限于大规模训练数据</li>
+</ul>
+<p>####关于深度森林的思考</p>
+<ol>
+<li>广义线性模型的集成模型：神经网路是线性单元通过非线性激活的组合，深度森林是随机深林的集成组合，目的都为了进行样本的表征学习。如果保留级联和多粒度策略，可否替代其中的随机森林换做其他的简单分类器或者预测器，深度svm，深度lr，深度nb，深度knn</li>
+<li>森林单元多样性选择可扩展，目前只用完全随机森林，随机森林，可尝试其他组合森林+svm+lr+nb+knn等各式各样的模型深度集成</li>
+<li>所有实验没有在大规模数据上进行，模型的capacity在大规模数据集上并未体现，即便满足自适应扩展和自适应终止</li>
+<li>集成是提升模型性能很好的策略，但是对于很多DNN模型其任务导向性太强，很难部署到一个新任务，即可迁移扩展性差。易于部署是学术界忽略的一个重要因素，本文提出的深度森林就很好的扩展性，能快速迁移到不同领域不同任务中。在非NLP和非图像数据集上，对于很多实际应用中的结构化数据（销售、推荐、商品等），通常较佳的 Kaggle 模型就是 xgboost 模型，相对于深度森林和深度网络更加快速易于部署实现。</li>
+<li>当前的深度深林方法仅仅是从DNN到gcForest的初步尝试，目前能够实现的继续学习任务分类和回归，对于一些复杂的任务还无法实现。</li>
+<li>DNN+gcForest组合模型，因为gcForest没有误差传递，所以当前只能基于级联实现表征学习，是否可以将表征之后的feature组合DNN模型实现复杂的机器学习任务等等，实现复杂度和应用性的折中考虑。</li>
+</ol>
+<h4 id="深度森林应用"><a href="#深度森林应用" class="headerlink" title="深度森林应用"></a>深度森林应用</h4><ol>
+<li>股票市场：<a href="https://zhuanlan.zhihu.com/p/49046206" target="_blank" rel="external">选股与择时——基于前景理论与深度森林算法</a></li>
+<li>分布式深度森林：<a href="https://zhuanlan.zhihu.com/p/37492203" target="_blank" rel="external">分布式深度森林算法检测套现欺诈</a></li>
+</ol>
+<p>####深度森林延伸</p>
+<p>Feng J, Zhou Z H. <a href="https://www.aaai.org/ocs/index.php/AAAI/AAAI18/paper/viewFile/16868/16612" target="_blank" rel="external">Autoencoder by forest</a>[C]//Thirty-Second AAAI Conference on Artificial Intelligence. 2018.</p>
+<p>Feng J, Yu Y, Zhou Z H. <a href="https://papers.nips.cc/paper/7614-multi-layered-gradient-boosting-decision-trees.pdf" target="_blank" rel="external">Multi-layered gradient boosting decision trees</a>[C]//Advances in Neural Information Processing Systems. 2018: 3551-3561.  </p>
+<h1 id="多层梯度提升决策树-Multi-Layered-Gradient-Boosting-Decision-Trees-mGBDT"><a href="#多层梯度提升决策树-Multi-Layered-Gradient-Boosting-Decision-Trees-mGBDT" class="headerlink" title="多层梯度提升决策树 Multi-Layered Gradient Boosting Decision Trees (mGBDT)"></a>多层梯度提升决策树 Multi-Layered Gradient Boosting Decision Trees (mGBDT)</h1><p>原文： <a href="https://papers.nips.cc/paper/7614-multi-layered-gradient-boosting-decision-trees.pdf" target="_blank" rel="external">Multi-layered gradient boosting decision trees</a></p>
+<p>中文介绍：<a href="https://www.jiqizhixin.com/articles/2018-06-04-12" target="_blank" rel="external">深度森林第三弹：周志华组提出可做表征学习的多层梯度提升决策树</a>, <a href="https://blog.csdn.net/zhaoyin654/article/details/80616205" target="_blank" rel="external">阅读笔记Multi-Layered Gradient Boosting Decision Trees</a></p>
+<p>####背景</p>
+<ol>
+<li>多层特征表示在神经网络中得到了充分地应用；然而，当模型不可微时，如针对离散型数据或表格型等结构化数据时，GBDTs通常是此类数据的主流方法，但是，该类方法通常很难学习到较好的特征表示能力。鉴于此 ，作者提出了通过stacking多层GBDTs来构建一层一层的模块，通过此种层次结构来获取数据特征的分层表示能力。(</li>
+<li>现今DL利用误差反向传播和梯度下降方法成为主流，然而，此类方法的基础是激活函数是可微的。其它方法包括使用目标传播(target propagation)，实验证明：基于目标传播的方法表现弱于误差传播方法</li>
+<li>针对离散型数据或表格型数据，基于树的集成学习算法RF或GBDTs是目前主流的方法；很大程度源于能够获取到数据的分层分布式表示(hierarchical distributed representation)，针对此类数据类型，无法使用误差的链式传播算法(chain-rule)，后向传播也变得不可能。</li>
+<li>期望：（1）够构造一个 非可微的多层模型(multi-layered model with non-differentiable components) 用于特征的分布式表示形式，中间层的输出可以被当作分布式表征；（2）如果可以，如何将层次之间连接起来，在没有反向传播的帮助下，如何训练这种模型（非可微组件构建的多层模型）</li>
+</ol>
+<p>因此本文期出了多层梯度提升决策树模型，其中心论点：多棵树的分层分布式表示(hierarchical distributed representations) 具有很大程度地来刻画数据的特性能力；更具象地：利用GBDTs来作为每层的块结构(blocks)来建立多层树结构的模型能够很好地将feature表示出来，与此同时，在训练时通过目标传播(target propagation)来进行优化，解决离散或者表格型结构化数据模型不可微问题。</p>
+<p>把反向传播迁移到不可微的模型中，具体方法是用另外一个模型替代求梯度的过程，把梯度反向传播回去。</p>
+
+      
+    </div>
+
+    <div>
+        
+            <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+
+        
+    </div>
+    
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/深度森林/" rel="tag"><i class="fa fa-tag"></i> 深度森林</a>
+          
+            <a href="/tags/Deep-Forest/" rel="tag"><i class="fa fa-tag"></i> Deep Forest</a>
+          
+            <a href="/tags/gcForest/" rel="tag"><i class="fa fa-tag"></i> gcForest</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/04/18/Bert在QA上新应用小结/" rel="next" title="Bert在QA上新应用小结">
+                <i class="fa fa-chevron-left"></i> Bert在QA上新应用小结
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/09/24/SNN脉冲神经网络总结/" rel="prev" title="SNN脉冲神经网络总结">
+                SNN脉冲神经网络总结 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.jpg"
+               alt="Nan Xu" />
+          <p class="site-author-name" itemprop="name">Nan Xu</p>
+           
+              <p class="site-description motion-element" itemprop="description">起风了</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">4</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">2</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">9</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/xunan0812" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.weibo.com/2810046525/profile?topnav=1&wvr=6" target="_blank" title="Weibo">
+                  
+                    <i class="fa fa-fw fa-weibo"></i>
+                  
+                  Weibo
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#深度森林Deep-Forest：探索深度神经网络以外的方法"><span class="nav-number">1.</span> <span class="nav-text">深度森林Deep Forest：探索深度神经网络以外的方法</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#表征学习Representation-Learning"><span class="nav-number">1.0.0.1.</span> <span class="nav-text">表征学习Representation Learning</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#深度森林gcForest比深度网络DNN的优势所在"><span class="nav-number">1.0.0.2.</span> <span class="nav-text">深度森林gcForest比深度网络DNN的优势所在</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#深度森林应用"><span class="nav-number">1.0.0.3.</span> <span class="nav-text">深度森林应用</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#多层梯度提升决策树-Multi-Layered-Gradient-Boosting-Decision-Trees-mGBDT"><span class="nav-number">2.</span> <span class="nav-text">多层梯度提升决策树 Multi-Layered Gradient Boosting Decision Trees (mGBDT)</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Nan Xu</span>
+</div>
+
+
+Miraclecc.cn
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+</body>
+</html>
