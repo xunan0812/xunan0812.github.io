@@ -130,7 +130,7 @@
 <meta property="og:image" content="https://img-blog.csdn.net/20171107090740513?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvc2FkZmFzc2Q=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/Center">
 <meta property="og:image" content="https://img-blog.csdn.net/20171107090800265?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvc2FkZmFzc2Q=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/Center">
 <meta property="og:image" content="https://img-blog.csdn.net/20170311190346897?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxMTg1MzQ3OQ==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
-<meta property="og:updated_time" content="2019-09-24T13:15:36.850Z">
+<meta property="og:updated_time" content="2019-09-24T13:45:42.029Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="SNN脉冲神经网络总结">
 <meta name="twitter:description" content="脉冲神经网络综述1 背景1.1神经网络进化到目前为止，神经网络的进化之路，可以化为如下三个阶段：
@@ -451,7 +451,6 @@
 <p><strong>IF模型</strong></p>
 <p>硬件模型：IF模型只有一个电容，没有并联的电阻，因为电阻实际等效于泄露电流，对应LIF模型。 高通低阻</p>
 <p>$$\frac{d V}{d t}=\frac{1}{C} I(t)$$</p>
-<p>$\frac{d V}{d t}=\frac{1}{C} I(t)$</p>
 <p>模型过于简单</p>
 <p><strong>Hodgkin-Huxley（ HH）模型</strong></p>
 <p>完全仿生物神经元模型</p>
@@ -465,11 +464,14 @@
 <p><strong>Leaky Integrate and Fire(LIF)模型</strong></p>
 <p><img src="https://ask.qcloudimg.com/http-save/developer-news/t7jv661fx3.jpeg?imageView2/2/w/1620" alt="img"> </p>
 <p>为了解决HH模型运算量的问题，许多学者提出了一系列的简化模型。LIF模型将细胞膜的<strong>电特性看成电阻和电容的组合</strong>。 leaky表示泄露，由于细胞膜是不断进行膜内外离子的交换，所以当只有一次输入时，电压会自动发生泄漏逐渐回落到静息状态。对于LIF模型一般是认为先下降低于Vrest,再上升的静息电位处，而IF神经元一般是认为直接回落到静息状态处，这里涉及到一个reset电位。这里的reset可以看成输入一个短暂的电流脉冲</p>
-<p>$$\frac{d V}{d t}=\frac{1}{C} I(t)$$</p>
 <p>$$I_r=-q_r \sum_f \delta\left(t-t^{(f)}\right)=-C\left(\vartheta-u_r\right) S(t)$$</p>
 <p>其中$q_{r}=C\left(\vartheta-u_r\right)$为电容需要移除的电荷量，因为这是模电压直接由电容器的电压设定。 </p>
 <p>响应公式</p>
-<p>$r(j)=\left{\begin{array}{ll}{\left[\tau<em>{r e f}-\tau</em>{R C} \log \left(1-\frac{V<em>{t h}}{j}\right)\right]^{-1}} &amp; {\text { if } j&gt;V</em>{t h}} \ {0} &amp; {\text { otherwise }}\end{array}\right.$</p>
+ 
+
+$r(j)=\left\{\begin{array}{ll}{\left[\tau _{r e f}-\tau _{R C} \log \left(1-\frac{V_{t h}}{j}\right)\right]^{-1}} & {\text { if } j>V_{t h}} \\ {0} & {\text { otherwise }}\end{array}\right.$
+
+
 <p>r(j)为firing rate，j为膜电压</p>
 <p><img src="https://img-blog.csdn.net/20170717163706317?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvcXFfMzQ4ODY0MDM=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="èçº¿ä¸ºçå®ï¼ä¸è¬ç¨å®çº¿æ¿ä»£ï¼$U_r$ä¸ºéç½®çµå"> </p>
 <p>虚线为真实，一般用实线替代，Ur为重置电压 </p>
@@ -602,18 +604,22 @@
 <p><strong>3.3.1监督Hebbian学习算法</strong></p>
 <p>通过“教师”信号使突触后神经元在目标时间内发放脉冲，“教师”信号可以表示为脉冲发放时间，也可以转换为神经元的突触电流形式。</p>
 <ol>
-<li>基于脉冲发放时间的Hebbian学习算法。在每个学习周期，学习过程由3个脉冲决定，包括两个突触前脉冲和1个突触后脉冲。第一个突触前脉冲表示输入信号，第2个突触前脉冲表示突触后神经元的目标脉冲。权值的学习规则可表示为</li>
-</ol>
-<p>   $$\Delta w=\eta\left(t_o^{f}-t_d^{f}\right)$$</p>
-<p>   其中，η表示学习率，$t_o^f$ 和$t^f_d$分别表示突触后神经元的实际和目标脉冲时间</p>
-<ol>
-<li>通过注入外部输入电流使学习神经元发放特定的目标脉冲序列 I-Learning算法，通过神经元目标和实际输出突触电流的误差进行计算 </li>
+<li><p>基于脉冲发放时间的Hebbian学习算法。在每个学习周期，学习过程由3个脉冲决定，包括两个突触前脉冲和1个突触后脉冲。第一个突触前脉冲表示输入信号，第2个突触前脉冲表示突触后神经元的目标脉冲。权值的学习规则可表示为</p>
+<p>$$\Delta w=\eta\left(t_o^{f}-t_d^{f}\right)$$</p>
+<p>其中，η表示学习率，$t_o^f$ 和$t^f_d$分别表示突触后神经元的实际和目标脉冲时间</p>
+</li>
+<li><p>通过注入外部输入电流使学习神经元发放特定的目标脉冲序列 I-Learning算法，通过神经元目标和实际输出突触电流的误差进行计算 </p>
+</li>
 </ol>
 <p><strong>3.3.2远程监督学习算法（ReSuMe）</strong></p>
 <p>STDP和anti-STDP两个过程结合-&gt;远程监督方法(Remote Supervised Method, ReSuMe) </p>
 <p>应用ReSuMe算法训练脉冲神经网络，突触权值的调整仅依赖于输入输出的脉冲序列和STDP机制，与神经元模型和突出类型无关，因此该算法可用于各种神经元模型。（但仅适用于单层神经网络的学习） </p>
 <p>ReSuMe算法的突触权值随时间变化的学习规则为</p>
-<p>$\Delta w_i=\left[S_d(t)-S_o(t)\right]\left[a_d+\int<em>0^{\infty} a</em>{di}(s) S_i(t-s) d s\right]$</p>
+ 
+
+$$\Delta w_i=\left[S_d(t)-S_o(t)\right]\left[a_d+\int_0^{\infty} a_{di}(s) S_i(t-s) d s\right]$$
+
+ 
 <p>其中，Si和So分别表示突触前输入脉冲序列和突触后输出脉冲序列， Sd表示目标脉冲序列，对于兴奋性突触，ad参数 取正值，学习窗口 adi(s)表示为STDP规则；对于抑制性突触，adad参数 取负值， adi(s)表示为anti-STDP规则。</p>
 <p>应用ReSuMe算法训练脉冲神经网路，突触权值的调整仅依赖于输入输出的脉冲序列和STDP机制，与神经元模型无关，因此该算法可适用于各种神经元模型。后来针对该算法的改进，使得ReSuMe算法可应用到多层前馈脉冲神经网络。</p>
 <p><strong>3.3.3 其他STDP监督学习算法</strong> </p>
