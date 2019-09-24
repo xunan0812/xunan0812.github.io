@@ -95,7 +95,7 @@
 <meta property="og:site_name" content="Miracle">
 <meta property="og:description" content="深度森林Deep Forest：探索深度神经网络以外的方法原文：Deep Forest:Towards An Alternative to Deep Neural Networks，周志华，2017
 该篇文章提出了深度森林 gcForest，这是一种决策树集成方法（decision tree ensemble approach），性能较之深度神经网络有很强的竞争力。深度神经网络需要花大力气调参，相">
-<meta property="og:updated_time" content="2019-09-24T07:22:51.090Z">
+<meta property="og:updated_time" content="2019-09-24T14:00:59.364Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="深度深林阅读笔记">
 <meta name="twitter:description" content="深度森林Deep Forest：探索深度神经网络以外的方法原文：Deep Forest:Towards An Alternative to Deep Neural Networks，周志华，2017
@@ -369,15 +369,14 @@
         <h1 id="深度森林Deep-Forest：探索深度神经网络以外的方法"><a href="#深度森林Deep-Forest：探索深度神经网络以外的方法" class="headerlink" title="深度森林Deep Forest：探索深度神经网络以外的方法"></a>深度森林Deep Forest：探索深度神经网络以外的方法</h1><p>原文：<a href="https://arxiv.org/pdf/1702.08835v2.pdf" target="_blank" rel="external">Deep Forest:Towards An Alternative to Deep Neural Networks</a>，周志华，2017</p>
 <p>该篇文章提出了深度森林 gcForest，这是一种决策树集成方法（decision tree ensemble approach），性能较之深度神经网络有很强的竞争力。深度神经网络需要花大力气调参，相比之下 gcForest 要容易训练得多。实际上，在几乎完全一样的超参数设置下，gcForest 在处理不同领域（domain）的不同数据时，也能达到极佳的性能。gcForest 的训练过程效率高且可扩展。实验中，它在一台 PC 上的训练时间和在 GPU 设施上跑的深度神经网络差不多，有鉴于 gcForest 天然适用于并行的部署，其效率高的优势就更为明显。此外，深度神经网络需要大规模的训练数据，而 gcForest 在仅有小规模训练数据的情况下也照常运转。不仅如此，作为一种基于树的方法，gcForest 在理论分析方面也应当比深度神经网络更加容易。 </p>
 <a id="more"></a>
-<h4 id="表征学习Representation-Learning"><a href="#表征学习Representation-Learning" class="headerlink" title="表征学习Representation Learning"></a>表征学习Representation Learning</h4><p>无论是深度学习还是深度森林，归根到底还是一个表征学习的过程，通过训练学习，使得模型学习发现样本的表征feature，好的表征器能够获得好的feature用于后面的分类、回归等任务输入。所以目前表征学习期望能够获得更好的样本特征表示，只要特征足够好，分类函数本身并不需要复杂。</p>
+<h2 id="表征学习Representation-Learning"><a href="#表征学习Representation-Learning" class="headerlink" title="表征学习Representation Learning"></a>表征学习Representation Learning</h2><p>无论是深度学习还是深度森林，归根到底还是一个表征学习的过程，通过训练学习，使得模型学习发现样本的表征feature，好的表征器能够获得好的feature用于后面的分类、回归等任务输入。所以目前表征学习期望能够获得更好的样本特征表示，只要特征足够好，分类函数本身并不需要复杂。</p>
 <p>一般来说为了运用大量数据，学习模型的容量通常都很大，因此深度网络因其复杂的网络结构，深度，有很强的样本表征学习能力。而DNN网络其实就是广义线性模型的非线性叠加，神经元组成实现线性计算，非线性激活实现非线性叠加。因此DNN能够自动发现特征与标签之间的非线性关系，即可通过端到端的训练得到非线性的神经决策边界。</p>
 <p>因此，本文的作者推测可以将这种性质用到其他合适的学习模型上，即将神经元这个基本结构替换成的了决策树产生了深度森林gcForest模型。</p>
-<p>####深度森林gcForest</p>
-<p>深度神经网络中的表征学习主要依赖于对原始特征进行逐层处理，因为有误差反向传播，整个过程整个网络属于端到端同步训练。<br>gcForest受此启发，采用级联结构，其中级联中的每一级接收到由前一级处理的特征信息，并将该级的处理结果输出给下一级，但是没有反向传播，确定一级在不满足终止条件时，扩展新级。在扩展一个新的级后，整个级联的性能将在验证集上进行估计，如果没有显着的性能增益，训练过程将终止；因此，级联中级的数量是自动确定的。与模型的复杂性固定的大多数深度神经网络相反，gcForest 能够适当地通过终止训练来决定其模型的复杂度。这使得 gcForest 能够适用于不同规模的训练数据，而不局限于大规模训练数据。</p>
+<h2 id="深度森林gcForest"><a href="#深度森林gcForest" class="headerlink" title="深度森林gcForest"></a>深度森林gcForest</h2><p>深度神经网络中的表征学习主要依赖于对原始特征进行逐层处理，因为有误差反向传播，整个过程整个网络属于端到端同步训练。<br>gcForest受此启发，采用级联结构，其中级联中的每一级接收到由前一级处理的特征信息，并将该级的处理结果输出给下一级，但是没有反向传播，确定一级在不满足终止条件时，扩展新级。在扩展一个新的级后，整个级联的性能将在验证集上进行估计，如果没有显着的性能增益，训练过程将终止；因此，级联中级的数量是自动确定的。与模型的复杂性固定的大多数深度神经网络相反，gcForest 能够适当地通过终止训练来决定其模型的复杂度。这使得 gcForest 能够适用于不同规模的训练数据，而不局限于大规模训练数据。</p>
 <p>通过级联结构，深度森林将模型作深。</p>
 <p>在处理特征上，同样受到DNN启发。gcForest认为对于对序列数据，顺序信息是极为关键的，因此，用多粒度扫描来增强级联森林。具体的：类似于卷积网络的多核局部感受野实现，采用滑动窗口的方法，先生成若干个实例，然后通过实例生成两个森林，一个完全随机森林，一个随机森林，然后再把生成的两个森林生成对应的相同维度的“类向量”，最后把这两大类向量连接在一起，但应对的一般来说会采用多个不同大小的窗口做扫描，类似于多核卷积。</p>
 <p>其中两中类型的随机森林保证集成子模型之间的差异性。</p>
-<h4 id="深度森林gcForest比深度网络DNN的优势所在"><a href="#深度森林gcForest比深度网络DNN的优势所在" class="headerlink" title="深度森林gcForest比深度网络DNN的优势所在"></a>深度森林gcForest比深度网络DNN的优势所在</h4><ul>
+<h2 id="深度森林gcForest比深度网络DNN的优势所在"><a href="#深度森林gcForest比深度网络DNN的优势所在" class="headerlink" title="深度森林gcForest比深度网络DNN的优势所在"></a>深度森林gcForest比深度网络DNN的优势所在</h2><ul>
 <li>集成性：gcForest属于一种集成的集成方法</li>
 <li>高性能：gcForest性能较深度神经网络有很强的竞争力</li>
 <li>参数少：gcForest所需参数少，容易训练</li>
@@ -387,8 +386,7 @@
 <li>解释性：gcForest作为一种基于树的方法，在理论分析方面也应当比深度神经网络更加容易</li>
 <li>自适应：gcForest 能够适当地通过终止训练来决定其模型的复杂度，使其不局限于大规模训练数据</li>
 </ul>
-<p>####关于深度森林的思考</p>
-<ol>
+<h2 id="关于深度森林的思考"><a href="#关于深度森林的思考" class="headerlink" title="关于深度森林的思考"></a>关于深度森林的思考</h2><ol>
 <li>广义线性模型的集成模型：神经网路是线性单元通过非线性激活的组合，深度森林是随机深林的集成组合，目的都为了进行样本的表征学习。如果保留级联和多粒度策略，可否替代其中的随机森林换做其他的简单分类器或者预测器，深度svm，深度lr，深度nb，深度knn</li>
 <li>森林单元多样性选择可扩展，目前只用完全随机森林，随机森林，可尝试其他组合森林+svm+lr+nb+knn等各式各样的模型深度集成</li>
 <li>所有实验没有在大规模数据上进行，模型的capacity在大规模数据集上并未体现，即便满足自适应扩展和自适应终止</li>
@@ -396,17 +394,15 @@
 <li>当前的深度深林方法仅仅是从DNN到gcForest的初步尝试，目前能够实现的继续学习任务分类和回归，对于一些复杂的任务还无法实现。</li>
 <li>DNN+gcForest组合模型，因为gcForest没有误差传递，所以当前只能基于级联实现表征学习，是否可以将表征之后的feature组合DNN模型实现复杂的机器学习任务等等，实现复杂度和应用性的折中考虑。</li>
 </ol>
-<h4 id="深度森林应用"><a href="#深度森林应用" class="headerlink" title="深度森林应用"></a>深度森林应用</h4><ol>
+<h2 id="深度森林应用"><a href="#深度森林应用" class="headerlink" title="深度森林应用"></a>深度森林应用</h2><ol>
 <li>股票市场：<a href="https://zhuanlan.zhihu.com/p/49046206" target="_blank" rel="external">选股与择时——基于前景理论与深度森林算法</a></li>
 <li>分布式深度森林：<a href="https://zhuanlan.zhihu.com/p/37492203" target="_blank" rel="external">分布式深度森林算法检测套现欺诈</a></li>
 </ol>
-<p>####深度森林延伸</p>
-<p>Feng J, Zhou Z H. <a href="https://www.aaai.org/ocs/index.php/AAAI/AAAI18/paper/viewFile/16868/16612" target="_blank" rel="external">Autoencoder by forest</a>[C]//Thirty-Second AAAI Conference on Artificial Intelligence. 2018.</p>
+<h2 id="深度森林延伸"><a href="#深度森林延伸" class="headerlink" title="深度森林延伸"></a>深度森林延伸</h2><p>Feng J, Zhou Z H. <a href="https://www.aaai.org/ocs/index.php/AAAI/AAAI18/paper/viewFile/16868/16612" target="_blank" rel="external">Autoencoder by forest</a>[C]//Thirty-Second AAAI Conference on Artificial Intelligence. 2018.</p>
 <p>Feng J, Yu Y, Zhou Z H. <a href="https://papers.nips.cc/paper/7614-multi-layered-gradient-boosting-decision-trees.pdf" target="_blank" rel="external">Multi-layered gradient boosting decision trees</a>[C]//Advances in Neural Information Processing Systems. 2018: 3551-3561.  </p>
 <h1 id="多层梯度提升决策树-Multi-Layered-Gradient-Boosting-Decision-Trees-mGBDT"><a href="#多层梯度提升决策树-Multi-Layered-Gradient-Boosting-Decision-Trees-mGBDT" class="headerlink" title="多层梯度提升决策树 Multi-Layered Gradient Boosting Decision Trees (mGBDT)"></a>多层梯度提升决策树 Multi-Layered Gradient Boosting Decision Trees (mGBDT)</h1><p>原文： <a href="https://papers.nips.cc/paper/7614-multi-layered-gradient-boosting-decision-trees.pdf" target="_blank" rel="external">Multi-layered gradient boosting decision trees</a></p>
 <p>中文介绍：<a href="https://www.jiqizhixin.com/articles/2018-06-04-12" target="_blank" rel="external">深度森林第三弹：周志华组提出可做表征学习的多层梯度提升决策树</a>, <a href="https://blog.csdn.net/zhaoyin654/article/details/80616205" target="_blank" rel="external">阅读笔记Multi-Layered Gradient Boosting Decision Trees</a></p>
-<p>####背景</p>
-<ol>
+<h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><ol>
 <li>多层特征表示在神经网络中得到了充分地应用；然而，当模型不可微时，如针对离散型数据或表格型等结构化数据时，GBDTs通常是此类数据的主流方法，但是，该类方法通常很难学习到较好的特征表示能力。鉴于此 ，作者提出了通过stacking多层GBDTs来构建一层一层的模块，通过此种层次结构来获取数据特征的分层表示能力。(</li>
 <li>现今DL利用误差反向传播和梯度下降方法成为主流，然而，此类方法的基础是激活函数是可微的。其它方法包括使用目标传播(target propagation)，实验证明：基于目标传播的方法表现弱于误差传播方法</li>
 <li>针对离散型数据或表格型数据，基于树的集成学习算法RF或GBDTs是目前主流的方法；很大程度源于能够获取到数据的分层分布式表示(hierarchical distributed representation)，针对此类数据类型，无法使用误差的链式传播算法(chain-rule)，后向传播也变得不可能。</li>
@@ -632,7 +628,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#深度森林Deep-Forest：探索深度神经网络以外的方法"><span class="nav-number">1.</span> <span class="nav-text">深度森林Deep Forest：探索深度神经网络以外的方法</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#表征学习Representation-Learning"><span class="nav-number">1.0.0.1.</span> <span class="nav-text">表征学习Representation Learning</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#深度森林gcForest比深度网络DNN的优势所在"><span class="nav-number">1.0.0.2.</span> <span class="nav-text">深度森林gcForest比深度网络DNN的优势所在</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#深度森林应用"><span class="nav-number">1.0.0.3.</span> <span class="nav-text">深度森林应用</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#多层梯度提升决策树-Multi-Layered-Gradient-Boosting-Decision-Trees-mGBDT"><span class="nav-number">2.</span> <span class="nav-text">多层梯度提升决策树 Multi-Layered Gradient Boosting Decision Trees (mGBDT)</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#深度森林Deep-Forest：探索深度神经网络以外的方法"><span class="nav-number">1.</span> <span class="nav-text">深度森林Deep Forest：探索深度神经网络以外的方法</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#表征学习Representation-Learning"><span class="nav-number">1.1.</span> <span class="nav-text">表征学习Representation Learning</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#深度森林gcForest"><span class="nav-number">1.2.</span> <span class="nav-text">深度森林gcForest</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#深度森林gcForest比深度网络DNN的优势所在"><span class="nav-number">1.3.</span> <span class="nav-text">深度森林gcForest比深度网络DNN的优势所在</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#关于深度森林的思考"><span class="nav-number">1.4.</span> <span class="nav-text">关于深度森林的思考</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#深度森林应用"><span class="nav-number">1.5.</span> <span class="nav-text">深度森林应用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#深度森林延伸"><span class="nav-number">1.6.</span> <span class="nav-text">深度森林延伸</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#多层梯度提升决策树-Multi-Layered-Gradient-Boosting-Decision-Trees-mGBDT"><span class="nav-number">2.</span> <span class="nav-text">多层梯度提升决策树 Multi-Layered Gradient Boosting Decision Trees (mGBDT)</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#背景"><span class="nav-number">2.1.</span> <span class="nav-text">背景</span></a></li></ol></li></ol></div>
             
 
           </div>
